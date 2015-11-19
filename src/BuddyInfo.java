@@ -1,15 +1,18 @@
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
 
 public class BuddyInfo {
 
 	private String name;
-	private long phoneNum;
-	private int stu_num;
+	private String address;
+	private int phoneNum;
 	
-	public BuddyInfo(String name, long num, int stu)
+	public BuddyInfo(String name, String address, int phoneNum)
 	{
 		this.name = name;
-		this.phoneNum = num;
-		this.stu_num = stu;
+		this.address = address;
+		this.setPhoneNum(phoneNum);
 	}
 	
 	public String getName() {
@@ -19,21 +22,33 @@ public class BuddyInfo {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public long getPhoneNum() {
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public int getPhoneNum() {
 		return phoneNum;
 	}
-	
-	public void setPhoneNum(long phoneNum) {
+
+	public void setPhoneNum(int phoneNum) {
 		this.phoneNum = phoneNum;
 	}
 	
-	public int getStu_num() {
-		return stu_num;
+	public String toString()
+	{
+		return (getName() + "$" + getAddress() + "$" + getPhoneNum());
 	}
 	
-	public void setStu_num(int stu_num) {
-		this.stu_num = stu_num;
+	public static BuddyInfo importB(String buddy)
+	{
+		Scanner s = new Scanner(buddy).useDelimiter("\\$");
+		BuddyInfo bud = new BuddyInfo(s.next(),s.next(),s.nextInt());
+		
+	    return bud; 
 	}
-	
 }
