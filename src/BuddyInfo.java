@@ -1,8 +1,7 @@
 import java.io.Serializable;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
-
+@SuppressWarnings("serial")
 public class BuddyInfo implements Serializable {
 
 	private String name;
@@ -47,6 +46,7 @@ public class BuddyInfo implements Serializable {
 	
 	public static BuddyInfo importB(String buddy)
 	{
+		@SuppressWarnings("resource")
 		Scanner s = new Scanner(buddy).useDelimiter("\\$");
 		BuddyInfo bud = new BuddyInfo(s.next(),s.next(),s.nextInt());
 		

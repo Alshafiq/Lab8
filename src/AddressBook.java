@@ -1,10 +1,7 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class AddressBook implements Serializable{
 
 	private ArrayList<BuddyInfo> buddy;
@@ -60,16 +58,16 @@ public class AddressBook implements Serializable{
 	public void export() throws IOException
 	{
         List<String> list = new ArrayList<String>();
-        
+        FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
         for(BuddyInfo b: buddy)
         {
             list.add(b.toString());
         }
         
         String[] stringArr = list.toArray(new String[0]);
-        FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		BufferedWriter bw = new BufferedWriter(fw);
-
+      
 		for(String s: stringArr)
 		{
 			bw.write(s);
@@ -83,7 +81,8 @@ public class AddressBook implements Serializable{
 	{
 		AddressBook book = new AddressBook();
 		BuddyInfo bud = null;
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+        @SuppressWarnings("resource")
+		BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         
         while ((line = reader.readLine()) != null) {    		
@@ -98,7 +97,6 @@ public class AddressBook implements Serializable{
 	{
 		FileOutputStream fos = new FileOutputStream(file);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		
 		oos.writeObject(this);
 		oos.close();
 	}
@@ -106,12 +104,10 @@ public class AddressBook implements Serializable{
 	public AddressBook sImport() throws IOException, ClassNotFoundException 
 	{
 		AddressBook book = new AddressBook();
-		
-		FileInputStream fis = new FileInputStream(file);
 		@SuppressWarnings("resource")
-		ObjectInputStream ois = new ObjectInputStream(fis);
-		
+		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 		book = (AddressBook) ois.readObject();
+		
 		return book;
 	}
 	
@@ -140,7 +136,6 @@ public class AddressBook implements Serializable{
 		{
 			System.out.println(book2.getBuddy(i).toString());
 		}
-		
 	}
 
 }
