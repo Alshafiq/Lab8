@@ -77,7 +77,7 @@ public class AddressBook {
 		AddressBook book = new AddressBook();
 		BuddyInfo bud = null;
 		
-		//Change this path for result!
+		//Change this path to import result!
         File file = new File("/users/alshafiqhasbi/desktop/file.txt");
         
         BufferedReader reader = new BufferedReader(new FileReader(file));
