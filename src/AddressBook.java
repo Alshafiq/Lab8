@@ -1,19 +1,34 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddressBook {
+public class AddressBook implements Serializable{
 
 	private ArrayList<BuddyInfo> buddy;
+	private File file; 
 	
-	public AddressBook()
+	public AddressBook() throws IOException
 	{
 		buddy = new ArrayList<>();
+		
+		//This is input output path!
+		file = new File("/users/alshafiqhasbi/desktop/file.txt");
+        if (!file.exists()) {
+			file.createNewFile();
+		}
 	}
 	
 	public void addBuddy(BuddyInfo bud)
@@ -50,19 +65,11 @@ public class AddressBook {
         {
             list.add(b.toString());
         }
-
+        
         String[] stringArr = list.toArray(new String[0]);
-		
-        //Change this path for result!
-        File file = new File("/users/alshafiqhasbi/desktop/file.txt");
-        
-        if (!file.exists()) {
-			file.createNewFile();
-		}
-        
         FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
-		
+
 		for(String s: stringArr)
 		{
 			bw.write(s);
@@ -76,12 +83,7 @@ public class AddressBook {
 	{
 		AddressBook book = new AddressBook();
 		BuddyInfo bud = null;
-		
-		//Change this path to import result!
-        File file = new File("/users/alshafiqhasbi/desktop/file.txt");
-        
         BufferedReader reader = new BufferedReader(new FileReader(file));
-
         String line;
         
         while ((line = reader.readLine()) != null) {    		
@@ -92,7 +94,28 @@ public class AddressBook {
         return book;
 	}
 
-	public static void main(String[] args) throws IOException {
+	public void sExport() throws IOException
+	{
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		
+		oos.writeObject(this);
+		oos.close();
+	}
+	
+	public AddressBook sImport() throws IOException, ClassNotFoundException 
+	{
+		AddressBook book = new AddressBook();
+		
+		FileInputStream fis = new FileInputStream(file);
+		@SuppressWarnings("resource")
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		
+		book = (AddressBook) ois.readObject();
+		return book;
+	}
+	
+	public static void main(String[] args) throws IOException, ClassNotFoundException {
 		// Setup
 		BuddyInfo bud1 = new BuddyInfo("Apik", "Alta Vista", 613854);
 		BuddyInfo bud2 = new BuddyInfo("Ahmad", "Colonel By", 613855);
@@ -106,8 +129,10 @@ public class AddressBook {
 		book.addBuddy(bud3);
 		
 		// Runner
-		book.export();
-		book2 = book.importA();
+		book.sExport();				//export AddressBook object
+		book2 = book.sImport();		//import AddressBook object
+		//book.export();			//export content of AddressBook
+		//book2 = book.importA();	//import content of AddressBook
 		System.out.println("See result in file.txt in the specified path(export).");
 		System.out.println("\nThis is book2(import from file) contents:");
 		

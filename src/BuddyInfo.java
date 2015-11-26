@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
-public class BuddyInfo {
+public class BuddyInfo implements Serializable {
 
 	private String name;
 	private String address;
